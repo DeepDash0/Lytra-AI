@@ -102,7 +102,8 @@ def verify_manifest(root: Path, manifest: dict) -> dict:
                 errors.append(f"content mismatch for {name}")
         except (OSError, ValueError) as exc:
             errors.append(f"cannot validate {row['path']}: {type(exc).__name__}")
-    return {"status": "PASS" if not errors else "FAIL", "file_count": len(files), "errors": errors}
+    return {"status": "PASS" if not errors else "FAIL", "file_count": len(files),
+            "entries_sha256": manifest["entries_sha256"], "errors": errors}
 
 
 def main(argv: list[str] | None = None) -> int:

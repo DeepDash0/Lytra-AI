@@ -39,6 +39,8 @@ jobs:
         run: python -m scripts.smoke_packing
       - name: Tokenizer alignment CLI smoke (synthetic)
         run: python -m scripts.smoke_alignment
+      - name: Checkpoint replay smoke (synthetic)
+        run: python -m scripts.smoke_resume
       - name: Preflight must block missing real-data evidence
         run: |
           python -m scripts.preflight --output preflight-ci.json && exit 1 || status=$?

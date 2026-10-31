@@ -33,5 +33,7 @@
 - [x] Add SHA-256 shard integrity manifest create/verify helper
 - [x] Build independent sample text-to-token alignment and fail-closed technical preflight
 - [x] Add Python regression tests and synthetic tokenizer CLI smoke
+- [x] Build 17-step declared-state replay comparator and synthetic checkpoint/resume smoke
+- [x] Add replay identity check to local technical preflight (not real TPU completion)
 - [ ] Run audits on verified real Lytra tokenizer and approved dataset shards
 - [ ] Cross-check actual Lytra-produced sample token IDs against independently re-tokenized source texts

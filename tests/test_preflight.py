@@ -33,14 +33,38 @@ def evidence():
         "counts": {"matched_records": 30, "valid_source_rows": 30},
         "error_codes": [],
     }
+    manifest_sha = "d" * 64
+    replay = {
+        "schema_version": 1, "status": "PASS_DECLARED_STRICT_REPLAY",
+        "expected_steps": 17, "split_step": 8, "steps_compared": 17,
+        "checkpoint_bytes_verified": True, "real_tpu_gate_completed": False,
+        "training_started": False, "error_codes": [],
+        "tokenizer_sha256": PIN, "dataset_manifest_sha256": manifest_sha,
+        "config_sha256": "e" * 64,
+    }
     return dict(
-        dataset=dataset, packing=packing, alignment=alignment,
-        manifest_check={"status": "PASS", "file_count": 2},
+        dataset=dataset, packing=packing, alignment=alignment, replay=replay,
+        manifest_check={"status": "PASS", "file_count": 2, "entries_sha256": manifest_sha},
         pinned_tokenizer_sha256=PIN, min_content_tokens=100000,
     )
 
 
 class PreflightTests(unittest.TestCase):
+    def test_replay_evidence_missing_blocks(self):
+        x = copy.deepcopy(evidence())
+        x["replay"] = None
+        self.assertEqual(evaluate_preflight(**x)["checks"]["declared_resume_replay"]["status"], "BLOCKED")
+
+    def test_replay_manifest_identity_mismatch_blocks(self):
+        x = copy.deepcopy(evidence())
+        x["replay"]["dataset_manifest_sha256"] = "a" * 64
+        self.assertEqual(evaluate_preflight(**x)["checks"]["declared_resume_replay"]["status"], "BLOCKED")
+
+    def test_replay_missing_checkpoint_bytes_blocks(self):
+        x = copy.deepcopy(evidence())
+        x["replay"]["checkpoint_bytes_verified"] = False
+        self.assertEqual(evaluate_preflight(**x)["checks"]["declared_resume_replay"]["status"], "BLOCKED")
+
     def test_no_artifacts_is_blocked(self):
         result = evaluate_preflight()
         self.assertEqual(result["status"], "BLOCKED")

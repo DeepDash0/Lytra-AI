@@ -30,6 +30,7 @@ def evaluate_preflight(
     packing: dict | None = None,
     alignment: dict | None = None,
     manifest_check: dict | None = None,
+    replay: dict | None = None,
     pinned_tokenizer_sha256: str | None = None,
     min_content_tokens: int = 1,
 ) -> dict:
@@ -110,6 +111,27 @@ def evaluate_preflight(
          _int(manifest_check.get("file_count"), 1),
          "Missing/failed file-content manifest verification.")
 
+    if not isinstance(replay, dict):
+        mark("declared_resume_replay", False, "17-step replay report missing.")
+    else:
+        manifest_identity = (manifest_check.get("entries_sha256")
+                             if isinstance(manifest_check, dict) else None)
+        mark("declared_resume_replay",
+             replay.get("schema_version") == 1 and
+             replay.get("status") == "PASS_DECLARED_STRICT_REPLAY" and
+             replay.get("expected_steps") == 17 and
+             replay.get("split_step") == 8 and
+             replay.get("steps_compared") == 17 and
+             replay.get("checkpoint_bytes_verified") is True and
+             replay.get("real_tpu_gate_completed") is False and
+             replay.get("training_started") is False and
+             replay.get("error_codes") == [] and
+             bool(pinned) and str(replay.get("tokenizer_sha256", "")).lower() == pinned and
+             valid_sha256(manifest_identity) and
+             str(replay.get("dataset_manifest_sha256", "")).lower() == manifest_identity.lower() and
+             valid_sha256(replay.get("config_sha256")),
+             "Missing/failed checkpoint replay evidence or manifest/tokenizer identity differs.")
+
     successful = all(v["status"] == "PASS" for v in checks.values())
     return {
         "schema_version": 1,
@@ -141,6 +163,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dataset-report", type=Path)
     parser.add_argument("--packing-report", type=Path)
     parser.add_argument("--alignment-report", type=Path)
+    parser.add_argument("--replay-report", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--shard-root", type=Path)
     parser.add_argument("--expected-tokenizer-sha256")
@@ -156,6 +179,7 @@ def main(argv: list[str] | None = None) -> int:
             dataset=_read(args.dataset_report),
             packing=_read(args.packing_report),
             alignment=_read(args.alignment_report),
+            replay=_read(args.replay_report),
             manifest_check=manifest_check,
             pinned_tokenizer_sha256=args.expected_tokenizer_sha256,
             min_content_tokens=args.min_content_tokens,

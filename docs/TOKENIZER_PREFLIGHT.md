@@ -34,7 +34,7 @@ The combined preflight is fail-closed. To check what is still missing locally:
 
 Expected result without artifacts is `BLOCKED` (exit code 2). Once source audit, packed-batch audit, independent tokenizer alignment and shard manifests have been verified, run:
 
-    python -m scripts.preflight --dataset-report <dataset_report.json> --packing-report <packing_report.json> --alignment-report <alignment_report.json> --manifest <private_manifest.json> --shard-root <private_shards_folder> --expected-tokenizer-sha256 <trusted_64_hex_sha> --min-content-tokens 10000000 --output artifacts/preflight_local.json
+    python -m scripts.preflight --dataset-report <dataset_report.json> --packing-report <packing_report.json> --alignment-report <alignment_report.json> --replay-report <replay_report.json> --manifest <private_manifest.json> --shard-root <private_shards_folder> --expected-tokenizer-sha256 <trusted_64_hex_sha> --min-content-tokens 10000000 --output artifacts/preflight_local.json
 
 `PASS_TECHNICAL_ONLY` means **only** the declared technical checks are consistent. Preflight never launches a training process and always leaves `production_ready=false` until a separate release process covers verified data rights, immutable full manifests, real TPU 17-step streaming/resume, durable checkpoint restore, and final production schedule. A matching artifact SHA cannot prove the packer or source producer was honest; the source and producer-side sample captures must be independently produced.
 
@@ -47,3 +47,5 @@ Expected result without artifacts is `BLOCKED` (exit code 2). Once source audit,
     python -m scripts.smoke_alignment
 
 All tests use synthetic data. Real source samples, model checkpoints, private manifests, credentials and tokenizer files must remain outside the Git repository.
+
+The preflight also requires a successful strict replay report described in [RESUME_GATE.md](RESUME_GATE.md), with the same tokenizer pin and the same canonical `entries_sha256` as the verified shard manifest. This is a **declared-state consistency check**, not the outstanding real-data TPU gate.

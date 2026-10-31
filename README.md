@@ -97,7 +97,8 @@ The repository includes local, auditable validation steps:
 - [Data shard manifest](docs/DATA_MANIFEST.md): deterministic SHA-256 integrity verification for explicitly selected shard files.
 - [Independent tokenizer alignment](docs/TOKENIZER_PREFLIGHT.md): re-tokenizes exact raw source samples using a pinned frozen tokenizer and compares producer-side token IDs.
 - [Fail-closed preflight](docs/TOKENIZER_PREFLIGHT.md): combines independent technical evidence but never declares production readiness or launches a training run.
+- [Strict checkpoint/replay evidence gate](docs/RESUME_GATE.md): validates 17-step interrupted/resumed state fingerprints and checkpoint file integrity against an uninterrupted trace.
 
-Create a private local Python environment and install the pinned CLI dependency with `python -m pip install -r requirements-audit.txt`. Run local tests with `python -m unittest discover -s tests -q`. Exercise synthetic test paths via `python -m scripts.smoke_packing` and `python -m scripts.smoke_alignment`. GitHub Actions reruns the unit tests and synthetic smokes on branch pushes and pull requests.
+Create a private local Python environment and install the pinned CLI dependency with `python -m pip install -r requirements-audit.txt`. Run local tests with `python -m unittest discover -s tests -q`. Exercise synthetic test paths via `python -m scripts.smoke_packing`, `python -m scripts.smoke_alignment` and `python -m scripts.smoke_resume`. GitHub Actions reruns the unit tests and synthetic smokes on branch pushes and pull requests.
 
 **Passing the local tests is not a real-data training readiness result.** Tokenizer identity, provider/rights verification, production dataset manifests, real TPU checkpoint restore and streaming/resume validation are still separate requirements.
