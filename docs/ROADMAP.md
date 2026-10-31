@@ -25,3 +25,11 @@
 - [ ] evaluation suite
 - [ ] progressive context extension
 - [ ] open-weight checkpoint release
+
+## Local support tooling (not production gate completion)
+
+- [x] Add provenance-aware sample dataset audit and unit tests
+- [x] Add packed-token trace auditing and synthetic canonical 512x4096 batch smoke
+- [x] Add SHA-256 shard integrity manifest create/verify helper
+- [ ] Run audits on verified real Lytra tokenizer and approved dataset shards
+- [ ] Cross-check emitted token IDs against re-tokenized held-out source samples

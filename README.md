@@ -87,3 +87,15 @@ Additional training tooling will be published as it is cleaned and made reproduc
 Lytra is independently developed and is not affiliated with a company, university, AMD, Google, or OpenAI.
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) for the current engineering milestones.
+
+## Local dataset validation tooling
+
+The repository includes three independent, local-only checks:
+
+- [Dataset sample audit](docs/DATASET_AUDIT.md): provenance flags, exact normalized-text duplicates, held-out SHA-256 overlaps and content-token counts with the frozen tokenizer.
+- [Packed-token audit](docs/PACKING_AUDIT.md): verifies emitted token-ID ranges, 4096-slot masks, 512-sequence optimizer updates and consistency with upstream accepted-token counts.
+- [Data shard manifest](docs/DATA_MANIFEST.md): deterministic SHA-256 integrity verification for explicitly selected shard files.
+
+Run local tests with `python -m unittest discover -s tests -q`. Exercise the canonical 512 × 4096 shape with synthetic data via `python -m scripts.smoke_packing`.
+
+**Passing the local tests is not a real-data training readiness result.** Tokenizer identity, provider/rights verification, production dataset manifests, real TPU checkpoint restore and streaming/resume validation are still separate requirements.

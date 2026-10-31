@@ -50,6 +50,11 @@ class DatasetAuditTests(unittest.TestCase):
         self.assertEqual(result["counts"]["invalid_schema"], 1)
         self.assertEqual(result["counts"]["accepted_records"], 1)
 
+    def test_unhashable_origin_is_rejected_without_crash(self):
+        result = self.run_audit([self.row("safe", origin=["human"]), self.row("real")])
+        self.assertEqual(result["counts"]["invalid_origin"], 1)
+        self.assertEqual(result["counts"]["accepted_records"], 1)
+
     def test_unicode_fingerprint(self):
         self.assertEqual(content_hash("caf\u00e9"), content_hash("cafe\u0301"))
 

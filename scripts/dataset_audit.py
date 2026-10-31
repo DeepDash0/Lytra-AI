@@ -74,7 +74,7 @@ def audit(
                     counts["empty_or_invalid_text"] += 1
                     continue
                 origin = item["origin"]
-                if origin not in ORIGINS:
+                if not isinstance(origin, str) or origin not in ORIGINS:
                     counts["invalid_origin"] += 1
                     continue
                 if item["split"] != "train":
