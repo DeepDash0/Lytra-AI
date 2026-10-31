@@ -35,5 +35,7 @@
 - [x] Add Python regression tests and synthetic tokenizer CLI smoke
 - [x] Build 17-step declared-state replay comparator and synthetic checkpoint/resume smoke
 - [x] Add replay identity check to local technical preflight (not real TPU completion)
+- [x] Add provisional two-stage 200B content-token schedule calculator and tokenizer-slot accounting ledger
+- [ ] Approve final two-stage source quotas and measure actual packing utilization before freezing production config
 - [ ] Run audits on verified real Lytra tokenizer and approved dataset shards
 - [ ] Cross-check actual Lytra-produced sample token IDs against independently re-tokenized source texts

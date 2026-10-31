@@ -36,14 +36,14 @@ Canonical optimizer geometry:
 - 512 packed sequences / optimizer update
 - 4,096 token slots / sequence
 - 2,097,152 token slots / update
-- nominal 95,368 optimizer updates
+- theoretical minimum 95,368 updates at 100% useful token slots (before per-stage rounding or padding)
 - AdamW
 - peak LR: 1.6e-4
 - warmup: 954 updates
 - cosine decay
 - BF16 model/activations
 
-See [docs/PRETRAINING_PLAN.md](docs/PRETRAINING_PLAN.md).
+See [docs/PRETRAINING_PLAN.md](docs/PRETRAINING_PLAN.md). The [provisional two-stage budget calculator](docs/TRAINING_BUDGET.md) keeps accepted content tokens separate from slot capacity and computes 190B/10B illustrative stage estimates at assumed packing utilization.
 
 ## Current validation status
 
@@ -98,6 +98,7 @@ The repository includes local, auditable validation steps:
 - [Independent tokenizer alignment](docs/TOKENIZER_PREFLIGHT.md): re-tokenizes exact raw source samples using a pinned frozen tokenizer and compares producer-side token IDs.
 - [Fail-closed preflight](docs/TOKENIZER_PREFLIGHT.md): combines independent technical evidence but never declares production readiness or launches a training run.
 - [Strict checkpoint/replay evidence gate](docs/RESUME_GATE.md): validates 17-step interrupted/resumed state fingerprints and checkpoint file integrity against an uninterrupted trace.
+- [Training budget and continuous optimizer-step ledger](docs/TRAINING_BUDGET.md): exact rational planning for proposed 200B accepted-content training and fail-closed per-update slot reconciliation.
 
 Create a private local Python environment and install the pinned CLI dependency with `python -m pip install -r requirements-audit.txt`. Run local tests with `python -m unittest discover -s tests -q`. Exercise synthetic test paths via `python -m scripts.smoke_packing`, `python -m scripts.smoke_alignment` and `python -m scripts.smoke_resume`. GitHub Actions reruns the unit tests and synthetic smokes on branch pushes and pull requests.
 

@@ -26,9 +26,9 @@ The data pipeline is English-only for V1, with dedicated high-quality web, code,
 - 512 packed sequences / update
 - 4,096 token slots / sequence
 - 2,097,152 token slots / update
-- nominal 95,368 updates for the 200B schedule
+- theoretical minimum 95,368 updates for a **single** 200B accepted-content target at 100% useful slot utilization; real packing efficiency and whole-step per-stage rounding increase this
 
-Accepted content-token accounting and runtime token-slot capacity are tracked separately.
+Accepted content-token accounting and runtime token-slot capacity are tracked separately. The [provisional two-stage budget model](TRAINING_BUDGET.md) proposes a 190B base + 10B recency split strictly for planning. Stage quotas, packing efficiency, exact optimizer steps, and training dates are **not approved or frozen**.
 
 ## Data-quality principles
 

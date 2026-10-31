@@ -7,11 +7,13 @@ on:
       - "tests/**"
       - "docs/**"
       - "requirements-audit.txt"
+      - "configs/**"
       - ".github/workflows/lytra-validation.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "tests/**"
+      - "configs/**"
       - "requirements-audit.txt"
       - ".github/workflows/lytra-validation.yml"
 
@@ -39,6 +41,10 @@ jobs:
         run: python -m scripts.smoke_packing
       - name: Tokenizer alignment CLI smoke (synthetic)
         run: python -m scripts.smoke_alignment
+      - name: Proposed 200B budget calculation
+        run: |
+          python -m scripts.training_budget --config configs/pretraining_200b_proposal.json --output budget-ci.json
+          python -c "import json; r=json.load(open('budget-ci.json')); assert r['status']=='PROPOSAL_ONLY' and r['target_accepted_content_tokens']==200000000000 and r['production_ready'] is False"
       - name: Checkpoint replay smoke (synthetic)
         run: python -m scripts.smoke_resume
       - name: Preflight must block missing real-data evidence

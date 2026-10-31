@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "project": "Lytra V1",
+  "status": "PROPOSAL_NOT_APPROVED",
+  "note": "Illustrative split for calculation only, not a locked production recipe. Stage targets must be approved after data-rights and packing audits.",
+  "targets": {
+    "accepted_content_tokens": 200000000000,
+    "stages": [
+      {
+        "name": "base",
+        "accepted_content_tokens": 190000000000,
+        "description": "General English/code/math/knowledge mix; proposed token allocation"
+      },
+      {
+        "name": "recency",
+        "accepted_content_tokens": 10000000000,
+        "description": "Late recency-focused mix; proposed token allocation"
+      }
+    ]
+  },
+  "batch": {
+    "devices": 8,
+    "microbatch_per_device": 1,
+    "gradient_accumulation": 64,
+    "sequences_per_optimizer_step": 512,
+    "sequence_length": 4096
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "warmup_optimizer_steps": 954,
+    "peak_learning_rate": "0.00016",
+    "final_learning_rate": "0.000016",
+    "schedule": "continuous_cosine_after_warmup"
+  },
+  "example_packing_utilizations": [
+    "1.00",
+    "0.98",
+    "0.95"
+  ],
+  "historical_benchmark_seconds_per_step": "42.703",
+  "measured_packing_utilization": null,
+  "approval": {
+    "frozen_tokenizer_verified": false,
+    "licensed_dataset_verified": false,
+    "real_data_packing_verified": false,
+    "tpu_resume_17_steps_verified": false,
+    "durable_checkpoint_restore_verified": false
+  }
+}
