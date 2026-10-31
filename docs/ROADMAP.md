@@ -31,5 +31,7 @@
 - [x] Add provenance-aware sample dataset audit and unit tests
 - [x] Add packed-token trace auditing and synthetic canonical 512x4096 batch smoke
 - [x] Add SHA-256 shard integrity manifest create/verify helper
+- [x] Build independent sample text-to-token alignment and fail-closed technical preflight
+- [x] Add Python regression tests and synthetic tokenizer CLI smoke
 - [ ] Run audits on verified real Lytra tokenizer and approved dataset shards
-- [ ] Cross-check emitted token IDs against re-tokenized held-out source samples
+- [ ] Cross-check actual Lytra-produced sample token IDs against independently re-tokenized source texts
